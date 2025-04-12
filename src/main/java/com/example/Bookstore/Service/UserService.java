@@ -41,7 +41,6 @@ public class UserService {
         userRepository.save(user);
         return "Registration successful!";
     }
-    //This is a change
 }
 
 
