@@ -94,4 +94,7 @@ public class User {
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
     }
+
+
+
 }

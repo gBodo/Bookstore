@@ -1,7 +1,6 @@
 package com.example.Bookstore.RequestBody;
 
 import jakarta.validation.constraints.*;
-import lombok.Data;
 
 public class RegistrationBody {
     @NotBlank

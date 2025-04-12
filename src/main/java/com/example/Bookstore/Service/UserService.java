@@ -6,6 +6,7 @@ import com.example.Bookstore.RequestBody.RegistrationBody;
 import com.example.Bookstore.Model.User;
 import com.example.Bookstore.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,6 +15,9 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -35,7 +39,7 @@ public class UserService {
         User user = new User();
         user.setUsername(registrationBody.getUsername());
         user.setEmail(registrationBody.getEmail());
-        user.setPassword(registrationBody.getPassword());
+        user.setPassword(passwordEncoder.encode(registrationBody.getPassword()));
         user.setRole(UserRole.CLIENT);
 
         userRepository.save(user);
