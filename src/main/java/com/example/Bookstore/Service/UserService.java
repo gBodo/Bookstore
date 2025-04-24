@@ -1,29 +1,30 @@
 package com.example.Bookstore.Service;
 
 import com.example.Bookstore.Constants.UserRole;
-import com.example.Bookstore.RequestBody.LoginBody;
 import com.example.Bookstore.RequestBody.RegistrationBody;
 import com.example.Bookstore.Model.User;
 import com.example.Bookstore.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
-
 
     public String registerUser(RegistrationBody registrationBody) {
         Optional<User> existingEmail = userRepository.findByEmail(registrationBody.getEmail());
@@ -45,6 +46,31 @@ public class UserService {
         userRepository.save(user);
         return "Registration successful!";
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    }
+
+//    public String loginUser(LoginBody loginBody, HttpSession session) {
+//        Optional<User> optionalUser = userRepository.findByUsername(loginBody.getUsername());
+//
+//        if (optionalUser.isPresent()) {
+//            User user = optionalUser.get();
+//
+//            if (passwordEncoder.matches(loginBody.getPassword(), user.getPassword())) {
+//                String role = (loginBody.getRole() != null) ? loginBody.getRole() : "Client";
+//                session.setAttribute("userId", user.getId());
+//                session.setAttribute("role", loginBody.getRole()); // still vulnerable if you want it to be
+//                return "Login successful!";
+//            } else {
+//                throw new IllegalArgumentException("Invalid password.");
+//            }
+//        } else {
+//            throw new IllegalArgumentException("User not found.");
+//        }
+//   }
 }
 
 
