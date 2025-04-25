@@ -1,0 +1,30 @@
+package com.example.Bookstore.Controller;
+
+import com.example.Bookstore.Model.Book;
+import com.example.Bookstore.Service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/admin/books")
+public class AdminBookController {
+
+    private final BookService bookService;
+
+    @Autowired
+    public AdminBookController(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    // Admin-only endpoint - only users with ADMIN role can add books
+    @PostMapping
+    public ResponseEntity<Book> addBook(@RequestBody Book book) {
+        Book savedBook = bookService.addBook(book);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
+    }
+}

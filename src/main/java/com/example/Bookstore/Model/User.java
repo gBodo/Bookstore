@@ -51,7 +51,7 @@ public class User implements UserDetails {
     // Add UserDetails implementation methods
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
     }
 
     public Long getId() {

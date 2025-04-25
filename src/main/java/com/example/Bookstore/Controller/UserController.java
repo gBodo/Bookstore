@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    @Operation(summary = "Register a user.")
+    @Operation(summary = "Register user.")
     public ResponseEntity<String> registerUser(@Valid @RequestBody RegistrationBody registrationBody) {
         try {
             String user = userService.registerUser(registrationBody);
@@ -45,7 +45,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest) {
+    @Operation(summary = "Login user.")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             // Authenticate the user
             authenticationManager.authenticate(
@@ -56,8 +57,8 @@ public class UserController {
             final String jwt = jwtUtil.generateToken(userDetails);
 
             // Return the JWT token
-            return ResponseEntity.ok(jwt);
-            // return ResponseEntity.ok(new LoginResponse(jwt))
+//            return ResponseEntity.ok(jwt);
+            return ResponseEntity.ok(new LoginResponse(jwt));
         } catch (Exception e) {
             // Handle authentication failure
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
