@@ -1,7 +1,8 @@
 package com.example.Bookstore.Controller;
 
-import com.example.Bookstore.Model.Book;
+import com.example.Bookstore.RequestBody.AddBookBody;
 import com.example.Bookstore.Service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,12 @@ public class AdminBookController {
 
     // Admin-only endpoint - only users with ADMIN role can add books
     @PostMapping
-    public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        Book savedBook = bookService.addBook(book);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
+    public ResponseEntity<String> addBook(@Valid @RequestBody AddBookBody addBookBody) {
+        try {
+            String book = bookService.addBook(addBookBody);
+            return ResponseEntity.status(HttpStatus.CREATED).body(book);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 }
