@@ -4,17 +4,17 @@ import com.example.Bookstore.RequestBody.AddReviewBody;
 import com.example.Bookstore.RequestBody.ViewReviewResponseBody;
 import com.example.Bookstore.Service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/reviews")
+@Tag(name="Review")
 public class ReviewController {
 
     private final ReviewService reviewService;

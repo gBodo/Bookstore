@@ -2,6 +2,7 @@ package com.example.Bookstore.Controller;
 
 import com.example.Bookstore.RequestBody.AddBookBody;
 import com.example.Bookstore.Service.BookService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/admin/books")
+@Tag(name="ADMIN ONLY!")
 public class AdminBookController {
 
     private final BookService bookService;
