@@ -19,7 +19,7 @@ public class AddBookBody {
     private String title;
     @NotNull
     @Positive
-    private long category_id;
+    private Integer category_id;
 
     public String getAuthor() {
         return author;
@@ -45,10 +45,10 @@ public class AddBookBody {
     public void setTitle(String title) {
         this.title = title;
     }
-    public long getCategory_id() {
+    public Integer getCategory_id() {
         return category_id;
     }
-    public void setCategory_id(long category_id) {
+    public void setCategory_id(Integer category_id) {
         this.category_id = category_id;
     }
 

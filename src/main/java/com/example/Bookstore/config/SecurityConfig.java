@@ -55,7 +55,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/swagger-ui.html").permitAll()
                         // Public endpoints
-                        .requestMatchers("/api/auth/**", "/api/books").permitAll()
+                        .requestMatchers("/api/auth/register","/api/auth/login", "/api/books/**","/api/reviews/book/**").permitAll()
                         // Admin-only endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

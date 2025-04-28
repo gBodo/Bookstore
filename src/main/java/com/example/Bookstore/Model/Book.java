@@ -1,10 +1,8 @@
 package com.example.Bookstore.Model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="Books")
@@ -31,6 +29,7 @@ public class Book {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category; // M:1 Relationship with Category
 
+    @JsonIgnore
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews; // 1:N Relationship with Reviews
 

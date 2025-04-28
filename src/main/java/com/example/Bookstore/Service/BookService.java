@@ -21,10 +21,24 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public List<Book> getAllBooks(Integer category, String search) {
+        if (category != null && search != null) {
+            return bookRepository.findByCategoryIdAndTitleContainingIgnoreCase(category, search);
+        } else if (category != null) {
+            return bookRepository.findByCategoryId(category);
+        } else if (search != null) {
+            return bookRepository.findByTitleContainingIgnoreCase(search);
+        } else {
+            return bookRepository.findAll();
+        }
     }
 
+    public Book getBookById(Integer id) throws RuntimeException {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+    }
+
+    // ADMIN
     public String addBook(AddBookBody addBookBody) {
         Book book = new Book();
         book.setAuthor(addBookBody.getAuthor());
