@@ -46,8 +46,7 @@ public class ReviewService {
     }
 
     public String addReview(Integer id, AddReviewBody reviewBody) {
-        // Find the user
-        // Get authenticated user from security context
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username;
 
@@ -60,11 +59,9 @@ public class ReviewService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Find the book
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
-        // Create and save the review
         Review review = new Review();
         review.setRating(reviewBody.getRating());
         review.setComment(reviewBody.getComment());
@@ -73,7 +70,6 @@ public class ReviewService {
 
         Review savedReview = reviewRepository.save(review);
 
-        // Convert to response DTO
         ViewReviewResponseBody responseBody = new ViewReviewResponseBody();
         responseBody.setId(savedReview.getId());
         responseBody.setRating(savedReview.getRating());

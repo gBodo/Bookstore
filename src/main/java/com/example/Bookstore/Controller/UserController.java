@@ -57,7 +57,6 @@ public class UserController {
             final String jwt = jwtUtil.generateToken(userDetails);
 
             // Return the JWT token
-//            return ResponseEntity.ok(jwt);
             return ResponseEntity.ok(new LoginResponse(jwt));
         } catch (Exception e) {
             // Handle authentication failure

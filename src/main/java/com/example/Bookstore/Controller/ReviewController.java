@@ -36,7 +36,7 @@ public class ReviewController {
     }
 
     @PostMapping("book/{id}")
-    @Operation(summary = "Add a review")
+    @Operation(summary = "Add a review.")
     public ResponseEntity<String> addReview(@PathVariable Integer id, @RequestBody AddReviewBody reviewBody) {
         try {
             String addedReview = reviewService.addReview(id,reviewBody);

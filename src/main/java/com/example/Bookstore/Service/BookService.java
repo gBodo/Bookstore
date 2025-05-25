@@ -1,15 +1,14 @@
 package com.example.Bookstore.Service;
 
-import com.example.Bookstore.Constants.UserRole;
 import com.example.Bookstore.Model.Book;
 import com.example.Bookstore.Model.Category;
-import com.example.Bookstore.Model.User;
 import com.example.Bookstore.Repository.BookRepository;
 import com.example.Bookstore.RequestBody.AddBookBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -40,6 +39,11 @@ public class BookService {
 
     // ADMIN
     public String addBook(AddBookBody addBookBody) {
+        Optional<Book> existingTitle = bookRepository.findByTitle(addBookBody.getTitle());
+
+        if (existingTitle.isPresent()) {
+            throw new IllegalArgumentException("The book is already posted.");
+        }
         Book book = new Book();
         book.setAuthor(addBookBody.getAuthor());
         book.setCoverImageUrl(addBookBody.getCover_image_url());
