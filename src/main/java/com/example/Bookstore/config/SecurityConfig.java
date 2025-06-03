@@ -48,18 +48,22 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.disable()) // <-- THIS LINE IS CRUCIAL FOR H2
+                )
                 .authorizeHttpRequests(auth -> auth
                         //Swagger endpoints
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/v3/api-docs.yaml").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
                         // Public endpoints
                         .requestMatchers("/api/auth/register","/api/auth/login").permitAll()
                         //Logged in endpoints
                         .requestMatchers("/api/books/**","/api/reviews/book/**").hasAnyRole("CLIENT","ADMIN")
                         // Admin-only endpoints
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/books/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

@@ -7,7 +7,6 @@ import com.example.Bookstore.Service.UserService;
 import com.example.Bookstore.Util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +15,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/api/auth")
 @Tag(name = "User", description = "Register and login a user.")
 public class UserController {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -38,10 +41,13 @@ public class UserController {
     public ResponseEntity<String> registerUser(@Valid @RequestBody RegistrationBody registrationBody) {
         try {
             String user = userService.registerUser(registrationBody);
+            logger.info("A new user has registred.");
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         } catch (IllegalArgumentException e) {
+            logger.error("Failed to create an account!");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
+
     }
 
     @PostMapping("/login")
@@ -57,9 +63,11 @@ public class UserController {
             final String jwt = jwtUtil.generateToken(userDetails);
 
             // Return the JWT token
+            logger.info("User logged in.");
             return ResponseEntity.ok(new LoginResponse(jwt));
         } catch (Exception e) {
             // Handle authentication failure
+            logger.error("Failed to login!");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }

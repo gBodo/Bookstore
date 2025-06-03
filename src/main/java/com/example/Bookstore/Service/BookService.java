@@ -4,8 +4,14 @@ import com.example.Bookstore.Model.Book;
 import com.example.Bookstore.Model.Category;
 import com.example.Bookstore.Repository.BookRepository;
 import com.example.Bookstore.RequestBody.AddBookBody;
+import com.example.Bookstore.RequestBody.DeleteBookBody;
+import com.example.Bookstore.RequestBody.UpdatePriceBookBody;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,15 +26,15 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<Book> getAllBooks(Integer category, String search) {
+    public List<Book> getAllBooks(Integer category, String search, Pageable pageable) {
         if (category != null && search != null) {
-            return bookRepository.findByCategoryIdAndTitleContainingIgnoreCase(category, search);
+            return bookRepository.findByCategoryIdAndTitleContainingIgnoreCase(category, search, pageable);
         } else if (category != null) {
-            return bookRepository.findByCategoryId(category);
+            return bookRepository.findByCategoryId(category, pageable);
         } else if (search != null) {
-            return bookRepository.findByTitleContainingIgnoreCase(search);
+            return bookRepository.findByTitleContainingIgnoreCase(search, pageable);
         } else {
-            return bookRepository.findAll();
+            return bookRepository.findAll((Sort) pageable);
         }
     }
 
@@ -55,5 +61,28 @@ public class BookService {
 
         bookRepository.save(book);
         return "Book added to the library.";
+    }
+
+    @Transactional
+    public String deleteBook(DeleteBookBody deleteBookBody){
+        Optional<Book> existingTitle = bookRepository.findByTitle(deleteBookBody.getTitle());
+        if (existingTitle.isEmpty()) {
+            throw new IllegalArgumentException("There is no book to be deleted.");
+        }
+        bookRepository.deleteBookByTitle(deleteBookBody.getTitle());
+        return "Book deleted.";
+    }
+
+    public String updateBookPrice(UpdatePriceBookBody updatePriceBookBody){
+        Book booktitle = bookRepository.findByTitle(updatePriceBookBody.getTitle()).get();
+
+        if (booktitle!=null) {
+            booktitle.setPrice(updatePriceBookBody.getPrice());
+            bookRepository.save(booktitle);
+        }
+        else{
+            throw new IllegalArgumentException("There is no book to be updated.");
+        }
+        return "Book price updated.";
     }
 }

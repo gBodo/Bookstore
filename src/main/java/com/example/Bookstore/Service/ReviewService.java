@@ -36,11 +36,11 @@ public class ReviewService {
 
         return reviews.stream()
                 .map(review -> {
-                    ViewReviewResponseBody dto = new ViewReviewResponseBody();
-                    dto.setId(review.getId());
-                    dto.setRating(review.getRating());
-                    dto.setComment(review.getComment());
-                    return dto;
+                    ViewReviewResponseBody viewReview = new ViewReviewResponseBody();
+                    viewReview.setId(review.getId());
+                    viewReview.setRating(review.getRating());
+                    viewReview.setComment(review.getComment());
+                    return viewReview;
                 })
                 .collect(Collectors.toList());
     }
